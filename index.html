@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APHRC: Story of the Urban Poor</title>
+<!--<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>-->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/typography.css" type="text/css" rel="stylesheet">
+<link href="css/default.css" type="text/css" rel="stylesheet">
+<link href="css/custom-responsive.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="js/d3.v3.min.js"></script>
+</head>
+<body>
+<div id="wrapper" class="container">
+	<div id="wrapper-content">
+		<div class="row">
+			<div class="col-sm-5"> 
+				<h2><form>Select Location: </form></h2>
+				<div id="wrapper-svg"></div>
+				<h2 id="sub-title">A snapshot: Comparing 6 of Kenya's Urban Poor Communities during September 2012</h2>
+			</div>
+			<div class="col-sm-7">
+				<div class="row">
+					<div class="col-sm-3"> <img id="bowl" src="images/bowl.png"> </div>
+					<div class="col-sm-9">
+						<h1>FOOD SECURITY AND DIVERSITY</h1>
+						<div class="line"></div>
+					</div>
+				</div>
+				<div id="stats">
+					<div id="title"><span></span>people go hungry every night</div>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pellentesque eros at dolor aliquet venenatis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus luctus condimentum leo, et lobortis nisl rhoncus in. Etiam sagittis, tellus sed molestie mattis, nibh neque ornare velit, non adipiscing turpis tortor ac magna.</p>
+					<p>Proin vestibulum id metus ac ullamcorper. Morbi adipiscing volutpat porta. Proin consectetur laoreet condimentum. Duis in nisl eget nibh pretium placerat eget eget nibh. Etiam nec egestas tellus. Suspendisse leo massa, volutpat eget accumsan in, pellentesque eget quam. </p>
+					<h2>Color Key:</h2>
+					<div id="color-key">
+						<div class="row">
+						</div>
+					</div>
+					
+					
+				</div>
+			</div>
+			<!--<div class="col-xs-2"><img class="model" src="images/props.png"></div>--> 
+		</div>
+	</div>
+	<div id="wrapper-footer"><img class="model" src="images/prop2.png"></div>
+</div>
+<script type="text/javascript">
+		//Page responsiveness
+		$(window).resize(responsive);
+		
+		//Width and height
+		var w = resp_width();
+		var h = resp_width();
+		
+		function resp_width(){ 
+			return $('#wrapper-svg').width()-30;
+		}
+
+		// Dataset made up of an array of objects
+		var dataset = [
+			{
+				"name":"Viwandani",
+				"pieces": [ 
+					{ 
+						"id":23,
+						"label":"food secure"
+					},								
+					{ 
+						"id":16,
+						"label":"mildly food insecure"
+					},								
+					{ 
+						"id":32,
+						"label":"moderately food insecure"
+					},
+					{ 
+						"id":29,
+						"label":"severely food insecure"
+					},								
+				]
+			},
+			{
+				"name":"Korogocho",
+				"pieces": [ 
+					{ 
+						"id":8,
+						"label":"food secure"
+					},								
+					{ 
+						"id":4,
+						"label":"mildly food insecure"
+					},								
+					{ 
+						"id":34,
+						"label":"moderately food insecure"
+					},
+					{ 
+						"id":54,
+						"label":"severely food insecure"
+					},								
+				]
+			},			
+			{
+				"name":"Dandora",
+				"pieces": [ 
+					{ 
+						"id":7,
+						"label":"food secure"
+					},								
+					{ 
+						"id":7,
+						"label":"mildly food insecure"
+					},								
+					{ 
+						"id":18,
+						"label":"moderately food insecure"
+					},
+					{ 
+						"id":68,
+						"label":"severely food insecure"
+					},								
+				]
+			},			
+			{
+				"name":"Mukuru",
+				"pieces": [ 
+					{ 
+						"id":13,
+						"label":"food secure"
+					},								
+					{ 
+						"id":11,
+						"label":"mildly food insecure"
+					},								
+					{ 
+						"id":32,
+						"label":"moderately food insecure"
+					},
+					{ 
+						"id":44,
+						"label":"severely food insecure"
+					},								
+				]
+			},			
+			{
+				"name":"Jericho",
+				"pieces": [ 
+					{ 
+						"id":43,
+						"label":"food secure"
+					},								
+					{ 
+						"id":6,
+						"label":"mildly food insecure"
+					},								
+					{ 
+						"id":12,
+						"label":"moderately food insecure"
+					},
+					{ 
+						"id":39,
+						"label":"severely food insecure"
+					},								
+				]
+			},			
+			{
+				"name":"Kisumu",
+				"pieces": [ 
+					{ 
+						"id":8,
+						"label":"food secure"
+					},								
+					{ 
+						"id":5,
+						"label":"mildly food insecure"
+					},								
+					{ 
+						"id":15,
+						"label":"moderately food insecure"
+					},
+					{ 
+						"id":73,
+						"label":"severely food insecure"
+					},								
+				]
+			},			
+			];
+		//var dataset = [ 5, 10, 20, 45, 6, 25 ];
+
+		//Easy colors accessible via a 10-step ordinal scale
+		var color = ["#7ca141","#6f3a68","#eca320","#b62d27"];
+
+		var outerRadius = w / 2;
+		var innerRadius = 0;
+		var arc = d3.svg.arc()
+						.innerRadius(innerRadius)
+						.outerRadius(outerRadius);
+		
+		var pie = d3.layout.pie()
+					.value(function(d) { return d.id; })
+					.sort(null);
+		
+		//Create SVG Element
+		var svg = d3.select("#wrapper-svg").append("svg")
+					.attr("width", w)
+					.attr("height", h)
+
+		var pieChart = svg.append("g")
+					.attr("id", "pieChart")
+					.attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+		
+		// Create Slice Groupings
+		var slice_group = pieChart.selectAll("path")
+					.data(pie(dataset[0].pieces))
+					.enter()
+    				.append("g")
+					.attr("id", function(d, i) { return i;})
+					
+					
+		//Create Arc Groups
+		var slice_path = slice_group.append("path")
+				.attr("fill", function(d, i) { return color[i];})
+				.each(function(d) { this._current = d; }) // store the initial angles
+
+		//Labels
+		var slice_label = slice_group.append("text")
+			    .attr("transform", function(d) {
+			    	return "translate(" + arc.centroid(d) + ")";
+			    })
+			    .attr("text-anchor", "middle")
+			    
+
+		//Statistics
+		var statsDIV = d3.select("#title span")
+		function stats(currentPie){
+			//console.log(currentPie);
+			var piecesArray = currentPie.pieces;
+			var severely = "";
+			for (x in piecesArray) {
+				if(piecesArray[x].label=='severely food insecure')
+				{
+					severely = piecesArray[x].id
+				}
+			}
+			severely = severely/4;
+			statsDIV.text(severely+'%');
+		}
+			
+			
+		// Form inputs
+		var form_select = d3.select("form")
+			.append("select")
+			.on("change", change);
+
+		form_select.selectAll("option")
+			.data(dataset)
+			.enter()
+			.append("option")
+
+			
+			.text(function(d) { return d.name; })
+			  //.attr("type", "radio")
+			  .attr("name", "location")
+			  .attr("value", function(d, i) { return i; })
+			  .filter(function(d, i) { return !i; })
+			  .each(change)
+			  //.call(function(d,i){ alert(JSON.stringify(this));})
+			  //.each(change)
+			  //.property("checked", true)
+				
+		// Responsiveness
+		function responsive(){
+			var w_new = $('#wrapper-svg').width()-30;
+			outerRadius = w_new/2;
+			
+			// Update SVG size
+			svg.transition()
+				.duration(750)
+				.attr("width", w_new)
+				.attr("height", w_new)
+				
+			// Update pieChart dimensions
+			pieChart.transition()
+				.duration(750)
+				.attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+				
+			// Update Arc Radius
+			arc.outerRadius(outerRadius);		
+			
+			// Update Path 
+			slice_path.transition()
+				.duration(750)
+				.attrTween("d", arcTween)
+			
+			// Update Text Location	
+			slice_label.transition()
+				.duration(750)
+			    .attr("transform", function(d) {
+			    	return "translate(" + arc.centroid(d) + ")";
+			    })
+		}
+				
+
+		function change(){	
+
+			if(this.options){var i = this.options[this.selectedIndex].value;}else{var i = 0;}	
+
+			var currentPie = dataset[i];
+			
+			//alert(JSON.stringify(currentPie));
+
+			stats(currentPie)
+
+			slice_path.data(pie(currentPie.pieces))
+				//.attr("d", arc)
+				.transition().duration(750).attrTween("d", arcTween); // redraw the arcs
+			
+			slice_label.data(pie(currentPie.pieces))
+				.transition().duration(750)
+			    .attr("transform", function(d) {
+			    	return "translate(" + arc.centroid(d) + ")";
+			    })
+			    .attr("text-anchor", "middle")
+				.text(function(d) {
+					if(d.value>0){
+			    	return d.value+'%';
+					}
+			    });	
+				
+		}
+		
+		// Store the displayed angles in _current.
+		// Then, interpolate from _current to the new angles.
+		// During the transition, _current is updated in-place by d3.interpolate.
+		function arcTween(d) {
+			// this._current represents FROM while "a" represents TO
+			if(this._current.startAngle == d.startAngle && d.startAngle ){
+				this._current.startAngle = 0;
+			}
+			var i = d3.interpolate(this._current, d);
+			this._current = i(0);
+			return function(t) {
+				return arc(i(t));
+				};
+		}
+		
+		
+		/**
+		* Tween functions
+		*/
+		function tweenText( newValue ) {
+			return function() {
+				// get current value as starting point for tween animation
+				var currentValue = +this.textContent;
+				// create interpolator and do not show nasty floating numbers
+				var i = d3.interpolateRound( currentValue, newValue );
+	
+				return function(t) {
+					this.textContent = i(t);
+				};
+				}
+		}
+		
+		//alert(JSON.stringify('niko'));
+		
+		// Use Jquery to draw the Color Key
+		$.each(color, function(index, value){
+			
+			var label = dataset[index].pieces[index].label;
+			$("#color-key .row").append('<div id="'+index+'" class="col-lg-6 item"><div style="background:'+value+'" class="circle pull-left"></div> % '+label+'</div>')			
+		})
+		
+		var key_button = d3.selectAll("#color-key .item")
+			.on("mouseover", function() {
+       			var key_index = d3.select(this).attr("id");
+			
+				//var key_animate = d3.selectAll("#pieChart g")
+					slice_path.filter(function(d, i) { return i!=key_index;})
+					//.each(popup)
+					.transition()
+					.duration(250)
+					.attr("fill", "#8f4520")
+					slice_label.filter(function(d, i) { return i!=key_index;})
+						.text("")
+			})
+			.on("mouseout", function(d) {
+				  // var key_animate = d3.selectAll("#pieChart g")
+				  slice_path
+				   		.transition()
+				   		.duration(250)
+						 .attr("fill", function(d, i) { return color[i];})
+						 slice_label
+					.text(function(d) {
+			    	return d.value+'%';
+			    });	
+						 
+			});
+		
+		
+				function popup(d, i){ alert(JSON.stringify(d));}
+				//.call(alert(JSON.stringify(this)));
+		
+	</script>
+</body>
+</html>

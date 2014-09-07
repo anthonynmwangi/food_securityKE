@@ -1,0 +1,37 @@
+@charset "utf-8";
+/* General CSS */
+html{ min-height:100%;position:relative;}
+body{ background:url(../images/bg.jpg) repeat;}
+img{ max-width:100%;}
+#wrapper{}
+#wrapper-content{ position:relative;}
+h2#sub-title { font-weight:bold; margin:0; }
+
+img#bowl{ margin-top:30px;}
+.line{ background:#8f4520;height: 3px; margin-left: -20%; position: absolute; width: 120%; z-index: -1;}
+p{text-align:justify;}
+p.title{ font-weight:bold; font-size:21px; margin:18px 0;}
+
+label{ display:block; font-size:18px; font-weight:normal;}
+select{ width:67%;}
+img.model{ /*height: auto; width: 175px; margin-left:20px;*/ position:absolute; bottom:15px; right:15px; width: 175px;}
+img#key{ width:80%;}
+#title{ font-size:42px; font-weight:bold;}
+#title span{ font-size:72px; margin-right:20px;}
+
+#color-key{ max-width:540px;}
+#color-key .row{ border:dashed 3px #726056;}
+.circle{
+	width: 35px;
+	height: 35px;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	margin-right:10px;
+}
+#color-key .item{ padding:10px 0 10px 10px; font-weight:bold; font-size:16px; cursor:pointer;}
+
+/* SVG CSS */
+path{ stroke:#FFF;}
+text{ fill:#FFF; font-weight:bold; font-size:18px }
+
